@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,10 +8,20 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
+import AddIcon from "../assets/images/addIcon.svg";
+
+const initialState = {
+  login: "",
+  email: "",
+  password: "",
+};
 
 export default function RegistrationScreen() {
   // state
+  const [state, setState] = useState(initialState);
   const [isFocused, setIsFocused] = useState({
     login: false,
     email: false,
@@ -39,105 +49,136 @@ export default function RegistrationScreen() {
     setShowPassword((showPassword) => !showPassword);
   };
 
+  const handleSubmit = () => {
+    setState(initialState);
+  };
+
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        style={styles.image}
-        source={require("../assets/images/background.jpg")}
-      >
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""}>
-          <View
-            style={
-              isShowKeyboard
-                ? [styles.form, { paddingBottom: 32 }]
-                : styles.form
-            }
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <ImageBackground
+          style={styles.image}
+          source={require("../assets/images/background.jpg")}
+        >
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : ""}
           >
-            <Text style={styles.formTitle}>Register</Text>
-            <TextInput
-              style={
-                isFocused.login
-                  ? [
-                      styles.input,
-                      { borderColor: "#FF6C00", backgroundColor: "#FFFFFF" },
-                    ]
-                  : styles.input
-              }
-              selectionColor={"#212121"}
-              placeholder={"Login"}
-              placeholderTextColor={"#BDBDBD"}
-              onFocus={() => handleInputFocus("login")}
-              onBlur={() => handleInputBlur("login")}
-            />
-            <TextInput
-              style={
-                isFocused.email
-                  ? [
-                      styles.input,
-                      { borderColor: "#FF6C00", backgroundColor: "#FFFFFF" },
-                    ]
-                  : styles.input
-              }
-              selectionColor={"#212121"}
-              placeholder={"Email"}
-              placeholderTextColor={"#BDBDBD"}
-              onFocus={() => handleInputFocus("email")}
-              onBlur={() => handleInputBlur("email")}
-            />
             <View
-              style={
-                isShowKeyboard
-                  ? [styles.wrapPassword, { marginBottom: 0 }]
-                  : styles.wrapPassword
-              }
+              style={{
+                ...styles.form,
+                paddingBottom: isShowKeyboard ? 32 : 78,
+              }}
             >
+              <Text style={styles.formTitle}>Register</Text>
               <TextInput
                 style={
-                  isFocused.password
+                  isFocused.login
                     ? [
                         styles.input,
-                        {
-                          borderColor: "#FF6C00",
-                          backgroundColor: "#FFFFFF",
-                          marginBottom: 0,
-                        },
+                        { borderColor: "#FF6C00", backgroundColor: "#FFFFFF" },
                       ]
-                    : [styles.input, { marginBottom: 0 }]
+                    : styles.input
                 }
                 selectionColor={"#212121"}
-                placeholder={"Password"}
+                value={state.login}
+                placeholder={"Login"}
                 placeholderTextColor={"#BDBDBD"}
-                secureTextEntry={!showPassword ? true : false}
-                onFocus={() => handleInputFocus("password")}
-                onBlur={() => handleInputBlur("password")}
+                onFocus={() => handleInputFocus("login")}
+                onBlur={() => handleInputBlur("login")}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, login: value }))
+                }
               />
-              <Text
-                style={styles.inputPasswordText}
-                onPress={handleTogglePassword}
+              <TextInput
+                style={
+                  isFocused.email
+                    ? [
+                        styles.input,
+                        { borderColor: "#FF6C00", backgroundColor: "#FFFFFF" },
+                      ]
+                    : styles.input
+                }
+                selectionColor={"#212121"}
+                value={state.email}
+                placeholder={"Email"}
+                placeholderTextColor={"#BDBDBD"}
+                onFocus={() => handleInputFocus("email")}
+                onBlur={() => handleInputBlur("email")}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, email: value }))
+                }
+              />
+              <View
+                style={
+                  isShowKeyboard
+                    ? [styles.wrapPassword, { marginBottom: 0 }]
+                    : styles.wrapPassword
+                }
               >
-                {!showPassword ? "Show" : "Hide"}
-              </Text>
-            </View>
-            <View style={{ display: isShowKeyboard ? "none" : "flex" }}>
-              <TouchableOpacity activeOpacity={0.7} style={styles.button}>
-                <Text style={styles.buttonTitle}>Register</Text>
-              </TouchableOpacity>
-              <View style={styles.warning}>
-                <Text style={styles.warningText}>Already have an account?</Text>
-                <TouchableOpacity activeOpacity={0.7} style={styles.warningBtn}>
-                  <Text style={styles.warningBtnTitle}>Login</Text>
+                <TextInput
+                  style={
+                    isFocused.password
+                      ? [
+                          styles.input,
+                          {
+                            borderColor: "#FF6C00",
+                            backgroundColor: "#FFFFFF",
+                            marginBottom: 0,
+                          },
+                        ]
+                      : [styles.input, { marginBottom: 0 }]
+                  }
+                  selectionColor={"#212121"}
+                  value={state.password}
+                  placeholder={"Password"}
+                  placeholderTextColor={"#BDBDBD"}
+                  secureTextEntry={!showPassword ? true : false}
+                  onFocus={() => handleInputFocus("password")}
+                  onBlur={() => handleInputBlur("password")}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, password: value }))
+                  }
+                />
+                <Text
+                  style={styles.inputPasswordText}
+                  onPress={handleTogglePassword}
+                >
+                  {!showPassword ? "Show" : "Hide"}
+                </Text>
+              </View>
+              <View style={{ display: isShowKeyboard ? "none" : "flex" }}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.button}
+                  onPress={handleSubmit}
+                >
+                  <Text style={styles.buttonTitle}>Register</Text>
                 </TouchableOpacity>
+                <View style={styles.warning}>
+                  <Text style={styles.warningText}>
+                    Already have an account?
+                  </Text>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles.warningBtn}
+                  >
+                    <Text style={styles.warningBtnTitle}>Login</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.avatarSceleton}>
+                <AddIcon
+                  style={styles.addIcon}
+                  width={25}
+                  height={25}
+                  fill="#FFFFFF"
+                />
               </View>
             </View>
-            <View style={styles.avatarSceleton}>
-              <View style={styles.avatarAdd}>
-                <Text style={styles.avatarAddText}>+</Text>
-              </View>
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-      </ImageBackground>
-    </View>
+          </KeyboardAvoidingView>
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -155,7 +196,6 @@ const styles = StyleSheet.create({
     position: "relative",
     width: "100%",
     paddingHorizontal: 16,
-    paddingBottom: 78,
     paddingTop: 92,
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
@@ -163,8 +203,8 @@ const styles = StyleSheet.create({
   },
   formTitle: {
     marginBottom: 32,
+    fontFamily: "Roboto-Bold",
     fontSize: 30,
-    // fontWeight: 500,
     lineHeight: 35,
     letterSpacing: 0.01,
     color: "#212121",
@@ -172,6 +212,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
+    fontFamily: "Roboto-Regular",
     lineHeight: 19,
     height: 50,
     marginBottom: 16,
@@ -190,6 +231,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 16,
     top: 15,
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",
@@ -203,6 +245,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonTitle: {
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
@@ -213,6 +256,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   warningText: {
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",
@@ -227,6 +271,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   warningBtnTitle: {
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     color: "#fff",
@@ -241,21 +286,10 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
   },
-  avatarAdd: {
+  addIcon: {
     position: "absolute",
     bottom: 14,
-    right: -14,
-    width: 25,
-    height: 25,
-    borderWidth: 2,
-    borderColor: "#FF6C00",
-    borderRadius: 12.5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  avatarAddText: {
-    fontSize: 25,
-    lineHeight: 25,
+    right: -13,
     color: "#FF6C00",
   },
 });
