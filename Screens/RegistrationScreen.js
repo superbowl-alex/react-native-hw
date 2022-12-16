@@ -50,6 +50,7 @@ export default function RegistrationScreen() {
   };
 
   const handleSubmit = () => {
+    console.log(state);
     setState(initialState);
   };
 
