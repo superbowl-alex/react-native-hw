@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import RegistrationScreen from "./Screens/RegistrationScreen";
-import LoginScreen from "./Screens/LoginScreen";
+import RegistrationScreen from "./Screens/RegistrationScreen/RegistrationScreen";
+import LoginScreen from "./Screens/LoginScreen/LoginScreen";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -43,7 +43,7 @@ export default function App() {
   }
   return (
     <View style={styles.screen} onLayout={onLayoutRootView}>
-      <RegistrationScreen />
+      <LoginScreen />
     </View>
   );
 }
