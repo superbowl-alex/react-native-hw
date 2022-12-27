@@ -29,8 +29,8 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   input: {
-    fontSize: 16,
     fontFamily: "Roboto-Regular",
+    fontSize: 16,
     lineHeight: 19,
     height: 50,
     marginBottom: 16,

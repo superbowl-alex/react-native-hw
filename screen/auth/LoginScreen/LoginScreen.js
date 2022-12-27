@@ -1,30 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  StyleSheet,
-  Text,
-  View,
   ImageBackground,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
   TextInput,
   TouchableOpacity,
-  Platform,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  Keyboard,
+  View,
 } from "react-native";
-import { styles } from "./RegistrationScreenStyle";
-import AddIcon from "../../assets/images/addIcon.svg";
+import { styles } from "./LoginScreenStyle";
 
 const initialState = {
-  login: "",
   email: "",
   password: "",
 };
 
-export default function RegistrationScreen() {
+export default function LoginScreen({ navigation }) {
   // state
   const [state, setState] = useState(initialState);
   const [isFocused, setIsFocused] = useState({
-    login: false,
     email: false,
     password: false,
   });
@@ -51,7 +47,7 @@ export default function RegistrationScreen() {
   };
 
   const handleSubmit = () => {
-    console.log(state);
+    navigation.navigate("Home");
     setState(initialState);
   };
 
@@ -60,37 +56,19 @@ export default function RegistrationScreen() {
       <View style={styles.container}>
         <ImageBackground
           style={styles.image}
-          source={require("../../assets/images/background.jpg")}
+          source={require("../../../assets/images/background.jpg")}
         >
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : ""}
           >
             <View
-              style={{
-                ...styles.form,
-                paddingBottom: isShowKeyboard ? 32 : 78,
-              }}
+              style={
+                isShowKeyboard
+                  ? [styles.form, { paddingBottom: 32 }]
+                  : styles.form
+              }
             >
-              <Text style={styles.formTitle}>Register</Text>
-              <TextInput
-                style={
-                  isFocused.login
-                    ? [
-                        styles.input,
-                        { borderColor: "#FF6C00", backgroundColor: "#FFFFFF" },
-                      ]
-                    : styles.input
-                }
-                selectionColor={"#212121"}
-                value={state.login}
-                placeholder={"Login"}
-                placeholderTextColor={"#BDBDBD"}
-                onFocus={() => handleInputFocus("login")}
-                onBlur={() => handleInputBlur("login")}
-                onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, login: value }))
-                }
-              />
+              <Text style={styles.formTitle}>Log in</Text>
               <TextInput
                 style={
                   isFocused.email
@@ -154,27 +132,18 @@ export default function RegistrationScreen() {
                   style={styles.button}
                   onPress={handleSubmit}
                 >
-                  <Text style={styles.buttonTitle}>Register</Text>
+                  <Text style={styles.buttonTitle}>Log in</Text>
                 </TouchableOpacity>
                 <View style={styles.warning}>
-                  <Text style={styles.warningText}>
-                    Already have an account?
-                  </Text>
+                  <Text style={styles.warningText}>Don't have an account?</Text>
                   <TouchableOpacity
                     activeOpacity={0.7}
                     style={styles.warningBtn}
+                    onPress={() => navigation.navigate("Register")}
                   >
-                    <Text style={styles.warningBtnTitle}>Login</Text>
+                    <Text style={styles.warningBtnTitle}>Register</Text>
                   </TouchableOpacity>
                 </View>
-              </View>
-              <View style={styles.avatarSceleton}>
-                <AddIcon
-                  style={styles.addIcon}
-                  width={25}
-                  height={25}
-                  fill="#FFFFFF"
-                />
               </View>
             </View>
           </KeyboardAvoidingView>
