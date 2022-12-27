@@ -7,7 +7,7 @@ import { useRoute } from "./router";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
-  const [isAuth, setisAuth] = useState(true);
+  const [isAuth, setisAuth] = useState(false);
   const routing = useRoute(isAuth);
 
   useEffect(() => {
