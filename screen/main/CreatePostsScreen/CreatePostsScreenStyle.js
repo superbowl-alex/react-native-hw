@@ -1,16 +1,53 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, Platform, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
     paddingVertical: 32,
+    height: Dimensions.get("window").height,
+  },
+  headerContainer: {
+    position: "relative",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    width: Dimensions.get("window").width,
+    paddingVertical: 11,
+    backgroundColor: "#ffffff",
+    marginTop: 32,
+    marginBottom: 32,
+    borderBottomColor: "rgba(0, 0, 0, 0.3)",
+    borderBottomWidth: 0.5,
+  },
+  headerTitle: {
+    fontFamily: "Roboto-Medium",
+    fontSize: 17,
+    lineHeight: 22,
+    color: "#212121",
+    letterSpacing: -0.408,
+  },
+  goBackButton: {
+    position: "absolute",
+    bottom: 11,
+    left: 16,
+  },
+  wrapMain: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     paddingHorizontal: 16,
+  },
+  wrapForm: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
   },
   containerImage: {},
   wrapImage: {
     position: "relative",
     height: 240,
+    width: Dimensions.get("window").width - 32,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
     borderWidth: 1,
@@ -24,7 +61,7 @@ export const styles = StyleSheet.create({
     width: 60,
     height: 60,
     backgroundColor: "#fff",
-    borderRadius: "50%",
+    borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -63,5 +100,15 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#BDBDBD",
+  },
+  trashButton: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 70,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#F6F6F6",
+    marginTop: Platform.OS === "ios" ? 120 : 50,
   },
 });

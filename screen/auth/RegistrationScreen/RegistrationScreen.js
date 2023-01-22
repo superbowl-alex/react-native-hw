@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   ImageBackground,
   Keyboard,
   KeyboardAvoidingView,
@@ -50,7 +51,11 @@ export default function RegistrationScreen({ navigation }) {
   };
 
   const handleSubmit = () => {
-    navigation.navigate("Home");
+    const { login, email, password } = state;
+    if (!login || !email || !password) {
+      return Alert.alert("All fields are required");
+    }
+    navigation.navigate("Home", { user: { login, email, password } });
     setState(initialState);
   };
 

@@ -8,7 +8,7 @@ import { useRoute } from "./router";
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const [isAuth, setisAuth] = useState(false);
-  const routing = useRoute(isAuth);
+  const routing = useRoute();
 
   useEffect(() => {
     async function prepare() {
@@ -16,6 +16,7 @@ export default function App() {
         // Pre-load fonts, make any API calls you need to do here
         await Font.loadAsync({
           "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+          "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
           "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
           "Roboto-BoldItalic": require("./assets/fonts/Roboto-BoldItalic.ttf"),
         });
