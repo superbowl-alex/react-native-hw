@@ -11,40 +11,55 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import shortid from "shortid";
 import CameraIcon from "../../../assets/images/icons/camera.svg";
+import { POSTS } from "../../../posts";
 import { styles } from "./CreatePostsScreenStyle";
 
-const initialState = {
-  photo: "",
+const initialPost = {
+  image: null,
   title: "",
   location: "",
 };
 
 export default function CreatePostsScreen({ navigation }) {
   // state
-  const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [cameraRef, setCameraRef] = useState(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [type, setType] = useState(CameraType.back);
-  const [photo, setPhoto] = useState(null);
+  const [post, setPost] = useState(initialPost);
 
   const takePhoto = async () => {
-    const photo = await cameraRef.takePictureAsync();
-    setPhoto(photo.uri);
+    if (cameraRef) {
+      const { uri } = await cameraRef.takePictureAsync();
+      setPost((prevPost) => ({
+        ...prevPost,
+        image: uri,
+      }));
+    }
   };
 
   const changeCameraType = () => {
     setType(type === CameraType.back ? CameraType.front : CameraType.back);
   };
+  const isFormCompleted = post.image && post.title && post.location;
+  const isAnyFieldCompleted = post.image || post.title || post.location;
 
-  const handleSubmit = () => {
-    console.log(state);
-    setState(initialState);
+  const publishPost = async () => {
+    if (!isFormCompleted) return Alert.alert("You have empty fields");
+    POSTS.unshift({
+      id: shortid.generate(),
+      title: post.title,
+      location: post.location,
+      photo: post.image,
+      likes: 0,
+      comments: [],
+    });
+    setPost(initialPost);
+
+    navigation.navigate("Posts");
   };
-
-  const isFormCompleted = state.photo && state.title && state.location;
-  const isAnyFieldCompleted = state.photo || state.title || state.location;
 
   useEffect(() => {
     (async () => {
@@ -83,7 +98,7 @@ export default function CreatePostsScreen({ navigation }) {
           <View style={styles.wrapForm}>
             <View style={styles.containerImage}>
               <View style={styles.wrapImage}>
-                {!photo && permission.granted && (
+                {!post.image && permission.granted && (
                   <Camera style={styles.camera} type={type} ref={setCameraRef}>
                     <TouchableOpacity
                       onPress={takePhoto}
@@ -98,13 +113,28 @@ export default function CreatePostsScreen({ navigation }) {
                     </TouchableOpacity>
                   </Camera>
                 )}
-                {photo && (
+                {post.image && (
                   <View style={styles.wrapPhoto}>
-                    <Image style={styles.photo} source={{ uri: photo }} />
+                    <Image style={styles.photo} source={{ uri: post.image }} />
                   </View>
                 )}
               </View>
-              <Text style={styles.textImage}>Download photo</Text>
+              <TouchableOpacity
+                style={{
+                  ...styles.uploadPhoto,
+                  color: post.image ? "#ffffff" : "#BDBDBD",
+                  backgroundColor: post.image ? "#FF6C00" : "#F6F6F6",
+                }}
+                onPress={() => {
+                  if (!post.image) return;
+                  setPost((prevPost) => ({
+                    ...prevPost,
+                    image: null,
+                  }));
+                }}
+              >
+                <Text style={styles.textImage}>Download photo</Text>
+              </TouchableOpacity>
             </View>
             <View
               style={
@@ -118,25 +148,25 @@ export default function CreatePostsScreen({ navigation }) {
                     : styles.input
                 }
                 selectionColor={"#212121"}
-                value={state.title}
+                value={post.title}
                 placeholder={"Title..."}
                 placeholderTextColor={"#BDBDBD"}
                 onFocus={() => setIsShowKeyboard(true)}
                 onBlur={() => setIsShowKeyboard(false)}
                 onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, title: value }))
+                  setPost((prevState) => ({ ...prevState, title: value }))
                 }
               />
               <TextInput
                 style={styles.input}
                 selectionColor={"#212121"}
-                value={state.location}
+                value={post.location}
                 placeholder={"Location..."}
                 placeholderTextColor={"#BDBDBD"}
                 onFocus={() => setIsShowKeyboard(true)}
                 onBlur={() => setIsShowKeyboard(false)}
                 onChangeText={(value) =>
-                  setState((prevState) => ({ ...prevState, location: value }))
+                  setPost((prevState) => ({ ...prevState, location: value }))
                 }
               />
               <TouchableOpacity
@@ -149,7 +179,7 @@ export default function CreatePostsScreen({ navigation }) {
                       ]
                     : styles.button
                 }
-                onPress={handleSubmit}
+                onPress={publishPost}
               >
                 <Text style={styles.buttonTitle}>Publish</Text>
               </TouchableOpacity>
@@ -165,7 +195,7 @@ export default function CreatePostsScreen({ navigation }) {
                   ]
                 : styles.trashButton
             }
-            onPress={() => setState(initialState)}
+            onPress={() => setPost(initialPost)}
           >
             <Feather
               name="trash-2"

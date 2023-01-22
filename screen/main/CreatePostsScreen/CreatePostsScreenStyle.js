@@ -80,6 +80,13 @@ export const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   cameraIcon: {},
+  uploadPhoto: {
+    width: 150,
+    paddingVertical: 5,
+    paddingHorizontal: 0,
+    borderRadius: 12,
+    alignItems: "center",
+  },
   textImage: {
     fontFamily: "Roboto-Regular",
     fontSize: 16,

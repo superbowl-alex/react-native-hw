@@ -4,17 +4,11 @@ import { styles } from "./OnePostStyle";
 
 export default function Post({
   post,
-  lastElemId,
   handleCommentClick,
   handleLocationClick,
 }) {
   return (
-    <View
-      style={{
-        ...styles.postContainer,
-        marginBottom: post.id !== lastElemId ? 34 : 15,
-      }}
-    >
+    <View style={styles.postContainer}>
       <Image style={styles.postImage} />
       <Text style={styles.postContainer}></Text>
       <View style={styles.postContainer}>

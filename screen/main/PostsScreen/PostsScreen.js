@@ -1,13 +1,11 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import { POSTS } from "../../../posts";
 import Post from "../OnePost";
-import { POSTS } from "./posts";
 import { styles } from "./PostsScreenStyle";
 
 export default function PostsScreen({ navigation, user: { login, email } }) {
-  const lastElemId = POSTS[POSTS.length - 1].id;
-
   const handleLogout = () => navigation.navigate("Login");
   const handleCommentClick = (post) =>
     navigation.navigate("Comments", { post });
@@ -50,7 +48,6 @@ export default function PostsScreen({ navigation, user: { login, email } }) {
         renderItem={({ item }) => (
           <Post
             post={item}
-            lastElemId={lastElemId}
             handleCommentClick={handleCommentClick}
             handleLocationClick={handleLocationClick}
           />
