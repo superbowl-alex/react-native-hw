@@ -6,7 +6,7 @@ import { styles } from "./ProfileScreenStyle";
 
 export default function ProfileScreen({ navigation, user: { login, email } }) {
   const handleLogout = () => navigation.navigate("Login");
-
+  const userName = login || "No nicname";
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -14,7 +14,7 @@ export default function ProfileScreen({ navigation, user: { login, email } }) {
         source={require("../../../assets/images/background.jpg")}
       >
         <View style={styles.wrapMain}>
-          <Text style={styles.title}>Register</Text>
+          <Text style={styles.title}>{userName}</Text>
           <TouchableOpacity
             activeOpacity={0.6}
             style={styles.logoutButton}

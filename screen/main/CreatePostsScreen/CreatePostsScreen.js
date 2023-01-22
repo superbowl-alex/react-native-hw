@@ -1,5 +1,6 @@
 import { Feather, Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
+import { Camera } from "expo-camera";
 import {
   Keyboard,
   Text,
@@ -58,14 +59,16 @@ export default function CreatePostsScreen({ navigation }) {
           <View style={styles.wrapForm}>
             <View style={styles.containerImage}>
               <View style={styles.wrapImage}>
-                <View style={styles.addImage}>
-                  <CameraIcon
-                    style={styles.cameraIcon}
-                    width={24}
-                    height={24}
-                    fill="#BDBDBD"
-                  />
-                </View>
+                <Camera style={styles.camera}>
+                  <TouchableOpacity style={styles.addImage}>
+                    <CameraIcon
+                      style={styles.cameraIcon}
+                      width={24}
+                      height={24}
+                      fill="#BDBDBD"
+                    />
+                  </TouchableOpacity>
+                </Camera>
               </View>
               <Text style={styles.textImage}>Download photo</Text>
             </View>

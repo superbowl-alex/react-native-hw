@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, Platform, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     paddingVertical: 11,
     backgroundColor: "#ffffff",
-    marginTop: 32,
+    marginTop: Platform.OS === "ios" ? 10 : 0,
     marginBottom: 32,
     borderBottomColor: "rgba(0, 0, 0, 0.3)",
     borderBottomWidth: 0.5,
