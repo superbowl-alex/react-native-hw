@@ -1,7 +1,9 @@
 import { Feather, Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { Camera } from "expo-camera";
+import { Camera, CameraType } from "expo-camera";
+import React, { useEffect, useState } from "react";
 import {
+  Alert,
+  Image,
   Keyboard,
   Text,
   TextInput,
@@ -22,6 +24,19 @@ export default function CreatePostsScreen({ navigation }) {
   // state
   const [state, setState] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [type, setType] = useState(CameraType.back);
+  const [photo, setPhoto] = useState(null);
+
+  const takePhoto = async () => {
+    const photo = await cameraRef.takePictureAsync();
+    setPhoto(photo.uri);
+  };
+
+  const changeCameraType = () => {
+    setType(type === CameraType.back ? CameraType.front : CameraType.back);
+  };
 
   const handleSubmit = () => {
     console.log(state);
@@ -30,6 +45,15 @@ export default function CreatePostsScreen({ navigation }) {
 
   const isFormCompleted = state.photo && state.title && state.location;
   const isAnyFieldCompleted = state.photo || state.title || state.location;
+
+  useEffect(() => {
+    (async () => {
+      await requestPermission();
+    })();
+  }, []);
+
+  if (!permission) return null;
+  if (!permission.granted) Alert.alert("No access to camera");
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -59,16 +83,26 @@ export default function CreatePostsScreen({ navigation }) {
           <View style={styles.wrapForm}>
             <View style={styles.containerImage}>
               <View style={styles.wrapImage}>
-                <Camera style={styles.camera}>
-                  <TouchableOpacity style={styles.addImage}>
-                    <CameraIcon
-                      style={styles.cameraIcon}
-                      width={24}
-                      height={24}
-                      fill="#BDBDBD"
-                    />
-                  </TouchableOpacity>
-                </Camera>
+                {!photo && permission.granted && (
+                  <Camera style={styles.camera} type={type} ref={setCameraRef}>
+                    <TouchableOpacity
+                      onPress={takePhoto}
+                      style={styles.addImage}
+                    >
+                      <CameraIcon
+                        style={styles.cameraIcon}
+                        width={24}
+                        height={24}
+                        fill="#BDBDBD"
+                      />
+                    </TouchableOpacity>
+                  </Camera>
+                )}
+                {photo && (
+                  <View style={styles.wrapPhoto}>
+                    <Image style={styles.photo} source={{ uri: photo }} />
+                  </View>
+                )}
               </View>
               <Text style={styles.textImage}>Download photo</Text>
             </View>

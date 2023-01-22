@@ -70,6 +70,15 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  wrapPhoto: {
+    width: "100%",
+    height: "100%",
+  },
+  photo: {
+    width: "100%",
+    height: 240,
+    resizeMode: "cover",
+  },
   cameraIcon: {},
   textImage: {
     fontFamily: "Roboto-Regular",
