@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   tabBarContainer: {
@@ -6,6 +6,14 @@ export const styles = StyleSheet.create({
     height: 83,
     paddingTop: 9,
     paddingHorizontal: 67,
+    ...Platform.select({
+      ios: {
+        height: 83,
+      },
+      android: {
+        height: 53,
+      },
+    }),
   },
 
   tabBarItem: {
