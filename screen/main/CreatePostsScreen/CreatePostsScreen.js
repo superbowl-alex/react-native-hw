@@ -1,5 +1,6 @@
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { Camera, CameraType } from "expo-camera";
+import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
 import {
   Alert,
@@ -26,9 +27,30 @@ export default function CreatePostsScreen({ navigation }) {
   // state
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [cameraRef, setCameraRef] = useState(null);
+  const [locationPermission, requestLocationPermission] =
+    Location.useForegroundPermissions();
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [type, setType] = useState(CameraType.back);
+  const [userLocation, setUserLocation] = useState(null);
   const [post, setPost] = useState(initialPost);
+
+  useEffect(() => {
+    (async () => {
+      await requestPermission();
+      await requestLocationPermission();
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setUserLocation(coords);
+    })();
+  }, []);
 
   const takePhoto = async () => {
     if (cameraRef) {
@@ -48,26 +70,32 @@ export default function CreatePostsScreen({ navigation }) {
 
   const publishPost = async () => {
     if (!isFormCompleted) return Alert.alert("You have empty fields");
+
+    // let location = await Location.getCurrentPositionAsync();
+    // const coords = {
+    //   latitude: location.coords.latitude,
+    //   longitude: location.coords.longitude,
+    // };
+    // console.log("coords", coords);
+    // setUserLocation(coords);
+    console.log("userLocation", userLocation);
+
     POSTS.unshift({
       id: shortid.generate(),
       title: post.title,
       location: post.location,
+      exactLocation: userLocation,
       photo: post.image,
       likes: 0,
       comments: [],
     });
-    setPost(initialPost);
 
     navigation.navigate("Posts");
+
+    setPost(initialPost);
   };
 
-  useEffect(() => {
-    (async () => {
-      await requestPermission();
-    })();
-  }, []);
-
-  if (!permission) return null;
+  if (!permission || !locationPermission) return null;
   if (!permission.granted) Alert.alert("No access to camera");
 
   return (
